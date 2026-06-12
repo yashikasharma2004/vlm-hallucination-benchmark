@@ -1,0 +1,23 @@
+{
+  "BLIP2_Random": {
+    "accuracy": 74.0,
+    "precision": 74.0,
+    "recall": 74.0,
+    "f1": 74.0,
+    "yes_bias": 49.67
+  },
+  "BLIP2_Popular": {
+    "accuracy": 73.67,
+    "precision": 73.83,
+    "recall": 73.33,
+    "f1": 73.58,
+    "yes_bias": 49.67
+  },
+  "BLIP2_Adversarial": {
+    "accuracy": 68.33,
+    "precision": 66.67,
+    "recall": 73.33,
+    "f1": 69.84,
+    "yes_bias": 55.0
+  }
+}
