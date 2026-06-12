@@ -29,22 +29,22 @@ Full results are logged in `results_summary.csv`. Summary below across 300 probi
 | InstructBLIP (vicuna-7b) | Popular | **84.33%** | **90.55%** | 76.67% | **83.03%** | **42.33%** |
 | InstructBLIP (vicuna-7b) | Adversarial | **81.33%** | **84.56%** | 76.67% | **80.42%** | **45.33%** |
 
-**Key takeaway:** InstructBLIP outperforms BLIP-2 by ~15% accuracy on average, with 2.6× fewer false positives under adversarial probing (21 vs 55), showing significantly stronger cross-modal grounding.
+> **Key takeaway:** InstructBLIP outperforms BLIP-2 by ~15% accuracy on average, with 2.6× fewer false positives under adversarial probing (21 vs 55), showing significantly stronger cross-modal grounding.
 
 ---
 
 ## 📈 Visualizations
 
 ### Accuracy & F1 Comparison
-![POPE Benchmark Results](plots/pope_results.png)
+![POPE Benchmark Results](pope_results.png)
 
 ### Adversarial Confusion Matrix
-![Confusion Matrix](plots/confusion_matrix.png)
+![Confusion Matrix](confusion_matrix.png)
 
-BLIP-2 shows a strong confirmation bias — 55 false positives under adversarial probing vs InstructBLIP's 21, highlighting its tendency to over-rely on language priors rather than visual evidence.
+> BLIP-2 shows a strong confirmation bias — 55 false positives under adversarial probing vs InstructBLIP's 21, highlighting its tendency to over-rely on language priors rather than visual evidence.
 
 ### Radar Chart — Avg Metrics Across All Settings
-![Radar Chart](plots/radar_chart.png)
+![Radar Chart](radar_chart.png)
 
 ---
 
@@ -83,19 +83,18 @@ Open `vlm_hallucination_eval.ipynb` in Jupyter or Kaggle and run all cells.
 ```
 vlm-hallucination-benchmark/
 ├── vlm_hallucination_eval.ipynb   # Main evaluation notebook
-├── requirements.txt
+├── requirements.txt               # Dependencies
 ├── results_summary.csv            # Full metrics log
 ├── blip2_results.json             # BLIP-2 output
 ├── final_results.json             # Combined results (both models)
-└── plots/
-    ├── pope_results.png           # Accuracy & F1 bar charts
-    ├── confusion_matrix.png       # Adversarial confusion matrices
-    └── radar_chart.png            # Multi-metric radar comparison
+├── pope_results.png               # Accuracy & F1 bar charts
+├── confusion_matrix.png           # Adversarial confusion matrices
+└── radar_chart.png                # Multi-metric radar comparison
 ```
 
 ---
 
-## 📌 Citation / References
+## 📌 References
 
 - [POPE: Polling-based Object Probing Evaluation](https://arxiv.org/abs/2305.10355)
 - [BLIP-2 (Salesforce)](https://huggingface.co/Salesforce/blip2-opt-2.7b)
