@@ -109,3 +109,9 @@ vlm-hallucination-benchmark/
 
 ## 📄 License
 This project is licensed under the MIT License.
+
+
+## 🚀 Future Work
+- Evaluate LLaVA-1.5 and Qwen-VL as additional baselines
+- Extend to full 500-image POPE standard setting
+- Add CHAIR metric for density-based hallucination scoring
