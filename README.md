@@ -1,4 +1,8 @@
 # Benchmarking Object Hallucination in Vision-Language Models via POPE
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.2-orange)
+![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 A quantitative evaluation pipeline to benchmark and compare **object hallucination** tendencies in Large Vision-Language Models (VLMs). This project evaluates **BLIP-2** and **InstructBLIP** using the **POPE (Polling-based Object Probing Evaluation)** framework across three probing settings on the COCO Val2014 dataset.
 
@@ -100,3 +104,8 @@ vlm-hallucination-benchmark/
 - [BLIP-2 (Salesforce)](https://huggingface.co/Salesforce/blip2-opt-2.7b)
 - [InstructBLIP (Salesforce)](https://huggingface.co/Salesforce/instructblip-vicuna-7b)
 - [COCO Dataset](https://cocodataset.org/)
+
+
+
+## 📄 License
+This project is licensed under the MIT License.
