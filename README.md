@@ -1,117 +1,143 @@
-# Benchmarking Object Hallucination in Vision-Language Models via POPE
+# 🧠 VLM Hallucination Benchmark — POPE Evaluation
+
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.2-orange)
 ![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow)
+![Dataset](https://img.shields.io/badge/Dataset-COCO_Val2014-lightgrey)
+![Models](https://img.shields.io/badge/Models-BLIP2_|_InstructBLIP-purple)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A quantitative evaluation pipeline to benchmark and compare **object hallucination** tendencies in Large Vision-Language Models (VLMs). This project evaluates **BLIP-2** and **InstructBLIP** using the **POPE (Polling-based Object Probing Evaluation)** framework across three probing settings on the COCO Val2014 dataset.
+> **Can a Vision-Language Model be trusted when it says "yes, that object is there"?**  
+> This project systematically answers that — by probing two state-of-the-art VLMs across 1800 hallucination tests.
 
 ---
 
-## 🔍 What is Object Hallucination?
+## 🔥 Why This Matters
 
-Object hallucination is one of the most critical failure modes in multimodal AI — where a model confidently asserts the presence of objects that don't actually exist in the image. This project quantifies that tendency across three distinct probing configurations:
+Modern AI models that understand images are being deployed in healthcare, autonomous driving, and robotics. But they have a dangerous flaw — **they hallucinate objects that don't exist**, often with high confidence.
 
-| Setting | Description |
+A model that says *"yes, there's a person in the road"* when there isn't one is not just wrong — it's dangerous.
+
+This project quantifies exactly how bad (and how fixable) this problem is, using the industry-standard **POPE framework** on **COCO Val2014**.
+
+---
+
+## 🧪 What We Tested
+
+Two models. Three adversarial settings. 900 probes each.
+
+| Setting | What It Tests |
 |---|---|
-| **Random** | Queries for completely random objects absent from the image |
-| **Popular** | Queries for frequently occurring COCO objects to test frequency bias |
-| **Adversarial** | Queries for contextually plausible but absent objects (e.g., asking "is there a sink?" in a kitchen that has none) |
+| **Random** | Can the model reject random absent objects? |
+| **Popular** | Does the model hallucinate common COCO objects due to frequency bias? |
+| **Adversarial** | Does the model hallucinate contextually plausible but absent objects? *(hardest)* |
 
 ---
 
 ## 📊 Results
-
-Full results are logged in `results_summary.csv`. Summary below across 300 probing iterations per setting (900 total per model):
 
 | Model | Setting | Accuracy | Precision | Recall | F1 | Yes-Bias |
 |---|---|---|---|---|---|---|
 | BLIP-2 (opt-2.7b) | Random | 70.00% | 68.75% | 73.33% | 70.97% | 53.33% |
 | BLIP-2 (opt-2.7b) | Popular | 73.67% | 73.83% | 73.33% | 73.58% | 49.67% |
 | BLIP-2 (opt-2.7b) | Adversarial | 68.33% | 66.67% | 73.33% | 69.84% | 55.00% |
-| InstructBLIP (vicuna-7b) | Random | **86.67%** | **95.83%** | 76.67% | **85.19%** | **40.00%** |
-| InstructBLIP (vicuna-7b) | Popular | **84.33%** | **90.55%** | 76.67% | **83.03%** | **42.33%** |
-| InstructBLIP (vicuna-7b) | Adversarial | **81.33%** | **84.56%** | 76.67% | **80.42%** | **45.33%** |
+| **InstructBLIP (vicuna-7b)** | Random | **86.67%** | **95.83%** | 76.67% | **85.19%** | **40.00%** |
+| **InstructBLIP (vicuna-7b)** | Popular | **84.33%** | **90.55%** | 76.67% | **83.03%** | 42.33% |
+| **InstructBLIP (vicuna-7b)** | Adversarial | **81.33%** | **84.56%** | 76.67% | **80.42%** | 45.33% |
 
-> **Key takeaway:** InstructBLIP outperforms BLIP-2 by ~15% accuracy on average, with 2.6× fewer false positives under adversarial probing (21 vs 55), showing significantly stronger cross-modal grounding.
+### 🔑 Key Findings
+
+- **InstructBLIP outperforms BLIP-2 by ~15% accuracy** across all three settings
+- **BLIP-2 has a severe confirmation bias** — 55 false positives under adversarial probing vs InstructBLIP's 21 — a **2.6× reduction**
+- **Yes-Bias drops from 55% → 40%** with InstructBLIP, meaning it is far less likely to blindly say "yes" to an object query
+- Even under the hardest adversarial setting, InstructBLIP holds **81.33% accuracy** — BLIP-2 collapses to 68.33%
 
 ---
 
 ## 📈 Visualizations
 
-### Accuracy & F1 Comparison
-![POPE Benchmark Results](pope_results.png)
+### Accuracy & F1 Across All Settings
+![POPE Results](pope_results.png)
 
-### Adversarial Confusion Matrix
+### Adversarial Confusion Matrix — Where Each Model Fails
 ![Confusion Matrix](confusion_matrix.png)
 
-> BLIP-2 shows a strong confirmation bias — 55 false positives under adversarial probing vs InstructBLIP's 21, highlighting its tendency to over-rely on language priors rather than visual evidence.
-
-### Radar Chart — Avg Metrics Across All Settings
+### Radar Chart — Full Metric Profile Per Model
 ![Radar Chart](radar_chart.png)
 
 ---
 
-## 🛠️ Setup & Installation
-
-### 1. Clone the repo
+## 🛠️ Setup
 
 ```bash
+# 1. Clone
 git clone https://github.com/yashikasharma2004/vlm-hallucination-benchmark.git
 cd vlm-hallucination-benchmark
-```
 
-### 2. Install dependencies
-
-```bash
+# 2. Install dependencies
 pip install -r requirements.txt
+
+# 3. Open notebook
+jupyter notebook
 ```
 
-### 3. Run the notebook
-
-Open `vlm_hallucination_eval.ipynb` in Jupyter or Kaggle and run all cells.
+> ⚠️ **Hardware note:** InstructBLIP (vicuna-7b) requires ~14GB VRAM.  
+> Use `device_map="auto"` + `torch_dtype=float16` (already configured in notebook) to run on a single A100/T4 GPU on Kaggle/Colab.
 
 ---
 
 ## 🧰 Tech Stack
 
-- **PyTorch** + **Hugging Face Transformers** — model loading and inference
-- **accelerate** — `device_map="auto"` with float16 for memory-efficient evaluation on consumer GPUs
-- **COCO Val2014** — evaluation dataset
-- **POPE Framework** — structured hallucination probing
+| Tool | Purpose |
+|---|---|
+| PyTorch 2.2 | Model inference |
+| Hugging Face Transformers | BLIP-2 & InstructBLIP loading |
+| accelerate | float16 + auto device mapping |
+| COCO Val2014 | Evaluation image dataset |
+| POPE Framework | Hallucination probing protocol |
 
 ---
 
-## 📁 File Structure
-
-```
+## 📁 Repository Structure
 vlm-hallucination-benchmark/
-├── vlm_hallucination_eval.ipynb   # Main evaluation notebook
-├── requirements.txt               # Dependencies
-├── results_summary.csv            # Full metrics log
-├── blip2_results.json             # BLIP-2 output
-├── final_results.json             # Combined results (both models)
+
+├── notebook53c75f753c (5).ipynb   # Main evaluation notebook
+
+├── requirements.txt               # All dependencies
+
+├── results_summary.csv            # Full metrics (900 probes × 2 models)
+
+├── blip2_results.json             # Raw BLIP-2 outputs
+
+├── final_results.json             # Combined results — both models
+
 ├── pope_results.png               # Accuracy & F1 bar charts
+
 ├── confusion_matrix.png           # Adversarial confusion matrices
+
 └── radar_chart.png                # Multi-metric radar comparison
-```
+
+
+---
+
+## 🚀 Future Work
+
+- [ ] Add **LLaVA-1.5** and **Qwen-VL** as additional baselines
+- [ ] Scale to full **500-image POPE standard** setting
+- [ ] Integrate **CHAIR metric** for density-based hallucination scoring
+- [ ] Fine-tune BLIP-2 on hard negatives to reduce Yes-Bias
 
 ---
 
 ## 📌 References
 
-- [POPE: Polling-based Object Probing Evaluation](https://arxiv.org/abs/2305.10355)
-- [BLIP-2 (Salesforce)](https://huggingface.co/Salesforce/blip2-opt-2.7b)
-- [InstructBLIP (Salesforce)](https://huggingface.co/Salesforce/instructblip-vicuna-7b)
+- [POPE Paper — ArXiv 2305.10355](https://arxiv.org/abs/2305.10355)
+- [BLIP-2 — Salesforce/blip2-opt-2.7b](https://huggingface.co/Salesforce/blip2-opt-2.7b)
+- [InstructBLIP — Salesforce/instructblip-vicuna-7b](https://huggingface.co/Salesforce/instructblip-vicuna-7b)
 - [COCO Dataset](https://cocodataset.org/)
 
-
+---
 
 ## 📄 License
-This project is licensed under the MIT License.
 
-
-## 🚀 Future Work
-- Evaluate LLaVA-1.5 and Qwen-VL as additional baselines
-- Extend to full 500-image POPE standard setting
-- Add CHAIR metric for density-based hallucination scoring
+MIT License — free to use, modify, and build on.
